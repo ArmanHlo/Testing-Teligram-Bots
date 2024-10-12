@@ -12,7 +12,7 @@ import torch
 from diffusers import StableDiffusionPipeline
 
 # Use environment variables for sensitive information
-TELEGRAM_API_TOKEN = os.getenv('TELEGRAM_API_TOKEN', 'YOUR_TELEGRAM_API_TOKEN')
+TELEGRAM_API_TOKEN = os.getenv('TELEGRAM_API_TOKEN', '8137808539:AAHLkp2A5wuJpOmeBFQMjkVRw5ySHDXF2sw')
 # Remove the IMG_GEN_API_KEY since it's no longer needed
 
 # Flask app for port binding
@@ -69,7 +69,7 @@ def run_telegram_bot():
 
 if __name__ == '__main__':
     # Start the Flask server in a separate thread
-    port = int(os.environ.get('PORT', 6000))  # Port for Flask
+    port = int(os.environ.get('PORT', 6001))  # Port for Flask
     threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': port}).start()
 
     # Run the Telegram bot
