@@ -1,0 +1,1 @@
+Pillow==10.4.0Flask==3.0.3python-telegram-bot==21.6requests==2.32.3torch==1.13.1+cu113torchvision==0.14.1+cu113torchaudio==0.13.1+cu113diffusers==0.15.1apscheduler==3.6.3
