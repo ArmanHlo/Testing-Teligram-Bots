@@ -7,13 +7,11 @@ from telegram import Update
 from flask import Flask
 import threading
 from apscheduler.schedulers.background import BackgroundScheduler
-import base64  # Import base64 for decoding base64 images
 import torch
 from diffusers import StableDiffusionPipeline
 
 # Use environment variables for sensitive information
 TELEGRAM_API_TOKEN = os.getenv('TELEGRAM_API_TOKEN', '8137808539:AAHLkp2A5wuJpOmeBFQMjkVRw5ySHDXF2sw')
-# Remove the IMG_GEN_API_KEY since it's no longer needed
 
 # Flask app for port binding
 app = Flask(__name__)
@@ -24,7 +22,7 @@ def home():
 
 # Keep-alive ping function
 def ping_self():
-    url = "https://your-render-app-url.onrender.com"  # Replace with your Render app's URL
+    url = "https://testing-teligram-bots.onrender.com"  # Replace with your Render app's URL
     try:
         requests.get(url)
         print(f"Pinged {url} to keep the app alive.")
@@ -44,17 +42,24 @@ async def handle_prompt(update: Update, context):
     try:
         # Generate image using Stable Diffusion
         image = pipe(user_input).images[0]
+
+        # Convert the image to RGB format and save as JPG
         output_path = f"image_{update.message.from_user.id}.jpg"
-        image.save(output_path)
+        image = image.convert("RGB")  # Ensure the image is in RGB format
+        image.save(output_path, format='JPEG')
 
         with open(output_path, 'rb') as img_file:
             await context.bot.send_photo(chat_id=update.message.chat.id, photo=img_file)
 
+        # Optional: Clean up the saved image file after sending
+        os.remove(output_path)
+
     except Exception as e:
-        await update.message.reply_text(f"Error: {str(e)}")
+        print(f"Error generating image: {str(e)}")  # Log the error for debugging
+        await update.message.reply_text(f"Error generating image: {str(e)}")
 
 # Start command handler
-async def start(update, context):
+async def start(update: Update, context):
     await update.message.reply_text("Hello! Send me a prompt, and I will generate an image in JPG format for you!")
 
 # Run the Telegram bot
@@ -75,7 +80,7 @@ if __name__ == '__main__':
     # Run the Telegram bot
     run_telegram_bot()
 
-    # Set up the scheduler to ping the app URL every 5 minutes
+    # Set up the scheduler to ping the app URL every 1 minute
     scheduler = BackgroundScheduler()
     scheduler.add_job(ping_self, 'interval', minutes=1)
     scheduler.start()
