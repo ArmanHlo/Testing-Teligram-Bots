@@ -10,4 +10,4 @@ apscheduler==3.6.3
 
 torch==2.1.0
 torchvision==0.16.0
-torchaudio==0.13.1  # ensure compatibility with torch version
+torchaudio==2.1.0
